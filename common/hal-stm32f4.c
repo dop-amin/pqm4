@@ -26,21 +26,36 @@ const struct rcc_clock_scale benchmarkclock = {
   .apb2_frequency = 24000000,
 };
 
+/* 100 MHz */
+const struct rcc_clock_scale fastclock = {
+  .pllm = 4, //VCOin = HSE / PLLM = 2 MHz
+  .plln = 100, //VCOout = VCOin * PLLN = 200 MHz
+  .pllp = 2, //PLLCLK = VCOout / PLLP = 100 MHz (max on STM32F413)
+  .pllq = 6, //PLL48CLK = VCOout / PLLQ = 33.3 MHz (USB OTG FS requires exactly 48, <= 48 for RNG)
+  .pllr = 0,
+  .hpre = RCC_CFGR_HPRE_DIV_NONE,
+  .ppre1 = RCC_CFGR_PPRE_DIV_2,
+  .ppre2 = RCC_CFGR_PPRE_DIV_NONE,
+  .voltage_scale = PWR_SCALE1,
+  .flash_config = FLASH_ACR_DCEN | FLASH_ACR_ICEN | FLASH_ACR_LATENCY_3WS,
+  .ahb_frequency = 100000000,
+  .apb1_frequency = 50000000,
+  .apb2_frequency = 100000000,
+};
+
 static void clock_setup(const enum clock_mode clock)
 {
-  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
-  //TODO: proper benchmarking clock
-  //  switch(clock)
-  //  {
-  //    case CLOCK_BENCHMARK:
-  //      rcc_clock_setup_hse_3v3(&benchmarkclock);
-  //      break;
-  //    case CLOCK_FAST:
-  //    default:
-  //      rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-  //      break;
-  //  }
-  //
+  switch(clock)
+  {
+    case CLOCK_BENCHMARK:
+      rcc_clock_setup_hse_3v3(&benchmarkclock);
+      break;
+    case CLOCK_FAST:
+    default:
+      rcc_clock_setup_hse_3v3(&fastclock);
+      break;
+  }
+
   rcc_periph_clock_enable(RCC_GPIOG);
   rcc_periph_clock_enable(RCC_USART6);
   rcc_periph_clock_enable(RCC_DMA1);
