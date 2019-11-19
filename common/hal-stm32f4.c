@@ -28,19 +28,21 @@ const struct rcc_clock_scale benchmarkclock = {
 
 static void clock_setup(const enum clock_mode clock)
 {
-  switch(clock)
-  {
-    case CLOCK_BENCHMARK:
-      rcc_clock_setup_hse_3v3(&benchmarkclock);
-      break;
-    case CLOCK_FAST:
-    default:
-      rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
-      break;
-  }
-
-  rcc_periph_clock_enable(RCC_GPIOA);
-  rcc_periph_clock_enable(RCC_USART2);
+  rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_84MHZ]);
+  //TODO: proper benchmarking clock
+  //  switch(clock)
+  //  {
+  //    case CLOCK_BENCHMARK:
+  //      rcc_clock_setup_hse_3v3(&benchmarkclock);
+  //      break;
+  //    case CLOCK_FAST:
+  //    default:
+  //      rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+  //      break;
+  //  }
+  //
+  rcc_periph_clock_enable(RCC_GPIOG);
+  rcc_periph_clock_enable(RCC_USART6);
   rcc_periph_clock_enable(RCC_DMA1);
   rcc_periph_clock_enable(RCC_RNG);
 
@@ -49,19 +51,19 @@ static void clock_setup(const enum clock_mode clock)
 
 static void gpio_setup(void)
 {
-  gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO2 | GPIO3);
-  gpio_set_af(GPIOA, GPIO_AF7, GPIO2 | GPIO3);
+  gpio_mode_setup(GPIOG, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO14);
+  gpio_set_af(GPIOG, GPIO_AF8, GPIO14);
 }
 static void usart_setup(int baud)
 {
-  usart_set_baudrate(USART2, baud);
-  usart_set_databits(USART2, 8);
-  usart_set_stopbits(USART2, USART_STOPBITS_1);
-  usart_set_mode(USART2, USART_MODE_TX_RX);
-  usart_set_parity(USART2, USART_PARITY_NONE);
-  usart_set_flow_control(USART2, USART_FLOWCONTROL_NONE);
+  usart_set_baudrate(USART6, baud);
+  usart_set_databits(USART6, 8);
+  usart_set_stopbits(USART6, USART_STOPBITS_1);
+  usart_set_mode(USART6, USART_MODE_TX);
+  usart_set_parity(USART6, USART_PARITY_NONE);
+  usart_set_flow_control(USART6, USART_FLOWCONTROL_NONE);
 
-  usart_enable(USART2);
+  usart_enable(USART6);
 }
 
 static void systick_setup(void)
@@ -76,9 +78,9 @@ static void send_USART_str(const char* in)
 {
   int i;
   for(i = 0; in[i] != 0; i++) {
-    usart_send_blocking(USART2, *(unsigned char *)(in+i));
+    usart_send_blocking(USART6, *(unsigned char *)(in+i));
   }
-  usart_send_blocking(USART2, '\n');
+  usart_send_blocking(USART6, '\n');
 }
 void hal_setup(const enum clock_mode clock)
 {
