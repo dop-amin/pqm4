@@ -15,10 +15,14 @@ const struct rcc_clock_scale benchmarkclock = {
   .plln = 192, //VCOout = VCOin * PLLN = 192 MHz
   .pllp = 8, //PLLCLK = VCOout / PLLP = 24 MHz (low to have 0WS)
   .pllq = 4, //PLL48CLK = VCOout / PLLQ = 48 MHz (required for USB, RNG)
+  .pllr = 0,
   .hpre = RCC_CFGR_HPRE_DIV_NONE,
   .ppre1 = RCC_CFGR_PPRE_DIV_2,
   .ppre2 = RCC_CFGR_PPRE_DIV_NONE,
+  .pll_source = RCC_CFGR_PLLSRC_HSE_CLK,
+  .voltage_scale = PWR_SCALE1,
   .flash_config = FLASH_ACR_DCEN | FLASH_ACR_ICEN | FLASH_ACR_LATENCY_0WS,
+  .ahb_frequency = 24000000,
   .apb1_frequency = 12000000,
   .apb2_frequency = 24000000,
 };
@@ -28,11 +32,11 @@ static void clock_setup(const enum clock_mode clock)
   switch(clock)
   {
     case CLOCK_BENCHMARK:
-      rcc_clock_setup_hse_3v3(&benchmarkclock);
+      rcc_clock_setup_pll(&benchmarkclock);
       break;
     case CLOCK_FAST:
     default:
-      rcc_clock_setup_hse_3v3(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
+      rcc_clock_setup_pll(&rcc_hse_8mhz_3v3[RCC_CLOCK_3V3_168MHZ]);
       break;
   }
 
@@ -63,9 +67,8 @@ static void usart_setup(int baud)
 
 static void systick_setup(void)
 {
-  // assumes clock_setup was called with CLOCK_BENCHMARK
   systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
-  systick_set_reload(2399999);
+  systick_set_reload(16777215);
   systick_interrupt_enable();
   systick_counter_enable();
 }
@@ -91,12 +94,18 @@ void hal_send_str(const char* in)
   send_USART_str(in);
 }
 
-static unsigned long long overflowcnt = 0;
+static volatile unsigned long long overflowcnt = 0;
 void sys_tick_handler(void)
 {
   ++overflowcnt;
 }
 uint64_t hal_get_time()
 {
-  return (overflowcnt+1)*2400000llu - systick_get_value();
+  while (true) {
+    unsigned long long before = overflowcnt;
+    unsigned long long result = (before + 1) * 16777216llu - systick_get_value();
+    if (overflowcnt == before) {
+      return result;
+    }
+  }
 }

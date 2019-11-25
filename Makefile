@@ -17,20 +17,17 @@ CFLAGS     += -O3 \
               -Wundef -Wshadow \
               -I$(OPENCM3DIR)/include \
               -fno-common $(ARCH_FLAGS) -MD $(DEFINES)
-LDFLAGS    += --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
-              -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
-               $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib -lm -l$(OPENCM3NAME)
 
 CC_HOST    = gcc
 LD_HOST    = gcc
 
 CFLAGS_HOST = -O3 -Wall -Wextra -Wpedantic
-LDFLAGS_HOST =
+LDFLAGS_HOST = -lm
 
 # override as desired
 TYPE=kem
 
-COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c
+COMMONSOURCES=mupq/common/fips202.c mupq/common/sha2.c mupq/common/sp800-185.c
 COMMONSOURCES_HOST=$(COMMONSOURCES) mupq/common/keccakf1600.c mupq/pqclean/common/aes.c
 COMMONSOURCES_M4=$(COMMONSOURCES) common/keccakf1600.S mupq/common/aes.c common/aes.S
 
@@ -44,9 +41,18 @@ DEST_HOST=bin-host
 DEST=bin
 
 TARGET_NAME = $(shell echo $(IMPLEMENTATION_PATH) | sed 's@/@_@g')
-TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed -r 's@(.*/)?crypto_(kem|sign)(/.*)@\2@')
+TYPE = $(shell echo $(IMPLEMENTATION_PATH) | sed 's@^\([^/]*/\)*crypto_\([^/]*\)/.*$$@\2@')
 IMPLEMENTATION_SOURCES = $(wildcard $(IMPLEMENTATION_PATH)/*.c) $(wildcard $(IMPLEMENTATION_PATH)/*.s) $(wildcard $(IMPLEMENTATION_PATH)/*.S)
 IMPLEMENTATION_HEADERS = $(IMPLEMENTATION_PATH)/*.h
+
+# allow schemes to use implementation-specific linker scripts
+ifneq ("$(wildcard ldscripts/$(TARGET_NAME).ld)","")
+    LDSCRIPT = ldscripts/$(TARGET_NAME).ld
+endif
+
+LDFLAGS    += --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
+              -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
+               $(ARCH_FLAGS) -L$(OPENCM3DIR)/lib -lm -l$(OPENCM3NAME)
 
 .PHONY: all
 all:
