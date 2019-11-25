@@ -60,7 +60,7 @@ class M4Settings(mupq.PlatformSettings):
 class M4(mupq.Platform):
 
     def __enter__(self):
-        self._dev = serial.Serial("/dev/ttyUSB0", 115200, timeout=10)
+        self._dev = serial.Serial("/dev/ttyACM0", 115200, timeout=10)
         return super().__enter__()
 
     def __exit__(self,*args, **kwargs):
