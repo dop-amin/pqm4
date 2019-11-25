@@ -19,6 +19,7 @@ const struct rcc_clock_scale benchmarkclock = {
   .hpre = RCC_CFGR_HPRE_DIV_NONE,
   .ppre1 = RCC_CFGR_PPRE_DIV_2,
   .ppre2 = RCC_CFGR_PPRE_DIV_NONE,
+  .pll_source = RCC_CFGR_PLLSRC_HSE_CLK,
   .voltage_scale = PWR_SCALE1,
   .flash_config = FLASH_ACR_DCEN | FLASH_ACR_ICEN | FLASH_ACR_LATENCY_0WS,
   .ahb_frequency = 24000000,
@@ -36,6 +37,7 @@ const struct rcc_clock_scale fastclock = {
   .hpre = RCC_CFGR_HPRE_DIV_NONE,
   .ppre1 = RCC_CFGR_PPRE_DIV_2,
   .ppre2 = RCC_CFGR_PPRE_DIV_NONE,
+  .pll_source = RCC_CFGR_PLLSRC_HSE_CLK,
   .voltage_scale = PWR_SCALE1,
   .flash_config = FLASH_ACR_DCEN | FLASH_ACR_ICEN | FLASH_ACR_LATENCY_3WS,
   .ahb_frequency = 100000000,
@@ -48,11 +50,11 @@ static void clock_setup(const enum clock_mode clock)
   switch(clock)
   {
     case CLOCK_BENCHMARK:
-      rcc_clock_setup_hse_3v3(&benchmarkclock);
+      rcc_clock_setup_pll(&benchmarkclock);
       break;
     case CLOCK_FAST:
     default:
-      rcc_clock_setup_hse_3v3(&fastclock);
+      rcc_clock_setup_pll(&fastclock);
       break;
   }
 
