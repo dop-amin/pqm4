@@ -7,10 +7,11 @@ Vadim Lyubashevsky, John M. Schanck, Peter Schwabe & Damien stehle
 ----------------------------------------------------------------------*/
 
 #include "api.h"
-#include<stdint.h>
-#include "SABER_params.h"
 #include "cbd.h"
+#include <stdint.h>
+#include "SABER_params.h"
 
+#if Saber_type == 1
 static uint64_t load_littleendian(const unsigned char *x, int bytes)
 {
   int i;
@@ -19,11 +20,22 @@ static uint64_t load_littleendian(const unsigned char *x, int bytes)
     r |= (uint64_t)x[i] << (8*i);
   return r;
 }
-
+#elif ((Saber_type == 2)||(Saber_type == 3))
+static uint32_t load_littleendian(const unsigned char *x, int bytes)
+{
+  int i;
+  uint32_t r = x[0];
+  for(i=1;i<bytes;i++)
+    r |= (uint32_t)x[i] << (8*i);
+  return r;
+}
+#else
+#error "Unsupported SABER parameter."
+#endif
 
 void cbd(uint16_t *r, const unsigned char *buf)
 {
-	uint16_t Qmod_minus1=SABER_Q-1;
+    uint16_t Qmod_minus1=SABER_Q-1;
 
 #if Saber_type == 3
   uint32_t t,d, a[4], b[4];
