@@ -7,7 +7,7 @@
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/cm3/systick.h>
-
+#include <stdio.h>
 
 /* 24 MHz */
 const struct rcc_clock_scale benchmarkclock = {
@@ -92,6 +92,18 @@ void hal_setup(const enum clock_mode clock)
 void hal_send_str(const char* in)
 {
   send_USART_str(in);
+}
+
+void hal_send_bytes(const unsigned char *in, size_t len)
+{
+    size_t i;
+    char str[3];
+    for(i = 0; i < len; i++) {
+        sprintf(str, "%02x", in[i]);
+        usart_send_blocking(USART2, str[0]);
+        usart_send_blocking(USART2, str[1]);
+    }
+    usart_send_blocking(USART2, '\n');
 }
 
 static volatile unsigned long long overflowcnt = 0;
