@@ -1,9 +1,7 @@
 #ifndef params_H
 #define params_H
 
-/* menu of parameter choices: */
-
-#include "paramsmenu.h"
+#include "config.h"
 
 /* what the menu means: */
 
