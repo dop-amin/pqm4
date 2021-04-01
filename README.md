@@ -58,11 +58,9 @@ The benchmarking scripts used in **pqm4** require Python >= 3.6.
 
 ### Installing pyserial
 The host-side Python code requires the [pyserial](https://github.com/pyserial/pyserial) module. 
-Your package repository might offer `python-serial` or `python-pyserial` directly 
-(as of writing, this is the case for Ubuntu, Debian and Arch). 
-Alternatively, this can be easily installed from PyPA by calling `pip install -r requirements.txt` 
-(or `pip3`, depending on your system). 
-If you do not have `pip` installed yet, you can typically find it as `python3-pip` using your package manager. 
+Your package repository might offer `python3-serial` (Debian, Ubuntu) or `python-pyserial` (Arch) or `python3-pyserial` (Fedora, openSUSE) or `pyserial` (Slack, CentOS, Gentoo) or `py3-pyserial` (Alpine) directly.
+Alternatively, this can be easily installed from PyPA by calling `pip3 install -r requirements.txt`.
+If you do not have `pip3` installed yet, you can typically find it as `python3-pip` (Debian, Ubuntu) or `python-pip` (Arch) using your package manager.
 
 ### Connecting the board to the host
 Connect the board to your host machine using the mini-USB port. 
@@ -107,22 +105,22 @@ int crypto_sign_open(unsigned char *m, size_t *mlen,
 
 
 ## Running tests and benchmarks
-Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the reference implementation of  [NewHope-1024-CCA-KEM](https://newhopecrypto.org) the following binaries are assembled: 
- - `bin/crypto_kem_newhope1024cca_ref_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](https://github.com/mupq/mupq/blob/master/crypto_kem/test.c) and [mupq/crypto_sign/test.c](https://github.com/mupq/mupq/blob/master/crypto_sign/test.c) for details.
- - `bin/crypto_kem_newhope1024cca_ref_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
- - `bin/crypto_kem_newhope1024cca_ref_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
- - `bin/crypto_kem_newhope1024cca_ref_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](https://github.com/mupq/mupq/blob/master/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](https://github.com/mupq/mupq/blob/master/crypto_sign/stack.c).
- - `bin/crypto_kem_newhope1024cca_ref_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors.c).
-- `bin-host/crypto_kem_newhope1024cca_ref_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors-host.c).
+Executing `python3 build_everything.py` compiles six binaries for each implemenation which can be used to test and benchmark the schemes. For example, for the M4 implementation of [Kyber768](https://pq-crystals.org/kyber/) the following binaries are assembled: 
+ - `bin/crypto_kem_kyber768_m4_test.bin` tests if the scheme works as expected. For KEMs this tests if Alice and Bob derive the same shared key and for signature schemes it tests if a generated signature can be verified correctly. Several failure cases are also checked, see [mupq/crypto_kem/test.c](https://github.com/mupq/mupq/blob/master/crypto_kem/test.c) and [mupq/crypto_sign/test.c](https://github.com/mupq/mupq/blob/master/crypto_sign/test.c) for details.
+ - `bin/crypto_kem_kyber768_m4_speed.bin` measures the runtime of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/speed.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_kyber768_m4_hashing.bin` measures the cycles spent in SHA-2, SHA-3, and AES of `crypto_kem_keypair`, `crypto_kem_enc`, and `crypto_kem_dec` for KEMs and `crypto_sign_keypair`, `crypto_sign`, and `crypto_sign_open` for signatures. See [mupq/crypto_kem/hashing.c](https://github.com/mupq/mupq/blob/master/crypto_kem/speed.c) and [mupq/crypto_sign/speed.c](https://github.com/mupq/mupq/blob/master/crypto_sign/speed.c).
+ - `bin/crypto_kem_kyber768_m4_stack.bin` measures the stack consumption of each of the procedures involved. The memory allocated outside of the procedures (e.g., public keys, private keys, ciphertexts, signatures) is not included. See [mupq/crypto_kem/stack.c](https://github.com/mupq/mupq/blob/master/crypto_kem/stack.c) and [mupq/crypto_sign/stack.c](https://github.com/mupq/mupq/blob/master/crypto_sign/stack.c).
+ - `bin/crypto_kem_kyber768_m4_testvectors.bin` uses a deterministic random number generator to generate testvectors for the implementation. These can be used to cross-check different implemenatations of the same scheme. See [mupq/crypto_kem/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors.c) and [mupq/crypto_sign/testvectors.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors.c).
+- `bin-host/crypto_kem_kyber768_m4_testvectors` uses the same deterministic random number generator to create the testvectors on your host. See [mupq/crypto_kem/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_kem/testvectors-host.c) and [mupq/crypto_sign/testvectors-host.c](https://github.com/mupq/mupq/blob/master/crypto_sign/testvectors-host.c).
 
-The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_newhope1024cca_ref_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
+The binaries can be flashed to your board using `st-flash`, e.g., `st-flash write bin/crypto_kem_kyber768_m4_test.bin 0x8000000`. To receive the output, run `python3 hostside/host_unidirectional.py`. 
 
 The **pqm4** framework automates testing and benchmarking for all schemes using Python3 scripts: 
 - `python3 test.py`: flashes all test binaries to the boards and checks that no errors occur. 
 - `python3 testvectors.py`: flashes all testvector binaries to the boards and writes the testvectors to `testvectors/`. Additionally, it executes the reference implementations on your host machine. Afterwards, it checks the testvectors of different implementations of the same scheme for consistency. 
 - `python3 benchmarks.py`: flashes the stack and speed binaries and writes the results to `benchmarks/stack/` and `benchmarks/speed/`. You may want to execute this several times for certain schemes for which the execution time varies significantly.
 
-In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py newhope1024cca sphincs-shake256-128s`. 
+In case you don't want to include all schemes, pass a list of schemes you want to include to any of the scripts, e.g., `python3 test.py kyber768 sphincs-shake256-128f-simple`. 
 In case you want to exclude certain schemes pass `--exclude`, e.g., `python3 test.py --exclude saber`.
 
 The benchmark results (in `benchmarks/`) created by 
@@ -263,18 +261,18 @@ new subdirectory under `crypto_sign/`.
 ## Using optimized AES
 
   Some schemes submitted to NIST make use of AES as a subroutine.
-  We included assembly-optimized implementations of AES-128/-192/-256 in ECB mode and in CTR mode.
-  The functions that can be used are stated in `mupq/common/aes.h` as follows:
+  We included assembly-optimized implementations of AES-128 and AES-256 in ECB mode and in CTR mode.
+
+  Up until January 2021, pqm4 relied on the [t-table implementation](https://github.com/Ko-/aes-armcortexm) by Schwabe and Stoffelen published at [SAC2016](https://eprint.iacr.org/2016/714.pdf).
+  On Cortex-M4 platforms with a data cache, this implementation may be vulnerable to cache attacks.
+  Hence, pqm4 is now using the [bitsliced implementation](https://github.com/aadomn/aes) by Adomnicai and Peyrin published in [TCHES2021/1](https://eprint.iacr.org/2020/1123.pdf).
+
+  The functions that can be used are stated in `common/aes.h` as follows:
   ```c
   void aes128_ecb_keyexp(aes128ctx *r, const unsigned char *key);
   void aes128_ctr_keyexp(aes128ctx *r, const unsigned char *key);
   void aes128_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx *ctx);
   void aes128_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx *ctx);
-
-  void aes192_ecb_keyexp(aes192ctx *r, const unsigned char *key);
-  void aes192_ctr_keyexp(aes192ctx *r, const unsigned char *key);
-  void aes192_ecb(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx *ctx);
-  void aes192_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx *ctx);
 
   void aes256_ecb_keyexp(aes256ctx *r, const unsigned char *key);
   void aes256_ctr_keyexp(aes256ctx *r, const unsigned char *key);
@@ -282,6 +280,26 @@ new subdirectory under `crypto_sign/`.
   void aes256_ctr(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx *ctx);
   ```
   Implementations can use these by including `aes.h`.
+
+  Some post-quantum schemes use AES with only public inputs (e.g., Kyber and FrodoKEM) and, consequently, do not need a constant-time AES implementation.
+  As those schemes would be unfairly penalized by swiching to a slower constant-time implementation, we additionally provide the t-table implementation.
+  The functions that can be used are stated in `common/aes-publicinputs.h` as follows:
+ ```c
+  void aes128_ecb_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ctr_keyexp_publicinputs(aes128ctx_publicinputs *r, const unsigned char *key);
+  void aes128_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes128ctx_publicinputs *ctx);
+  void aes128_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes128ctx_publicinputs *ctx);
+
+  void aes192_ecb_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ctr_keyexp_publicinputs(aes192ctx_publicinputs *r, const unsigned char *key);
+  void aes192_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes192ctx_publicinputs *ctx);
+  void aes192_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes192ctx_publicinputs *ctx);
+
+  void aes256_ecb_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ctr_keyexp_publicinputs(aes256ctx_publicinputs *r, const unsigned char *key);
+  void aes256_ecb_publicinputs(unsigned char *out, const unsigned char *in, size_t nblocks, const aes256ctx_publicinputs *ctx);
+  void aes256_ctr_publicinputs(unsigned char *out, size_t outlen, const unsigned char *iv, const aes256ctx_publicinputs *ctx);
+ ```
 
 ## Bibliography
 

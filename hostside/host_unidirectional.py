@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import serial
 import sys
+import platform
 
 dev = serial.Serial("/dev/ttyACM0", 115200)
 

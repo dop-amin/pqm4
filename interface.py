@@ -19,6 +19,9 @@ class M4Settings(mupq.PlatformSettings):
     #: List of dicts, in each dict specify (Scheme class) attributes of the
     #: scheme with values, if all attributes match the scheme is skipped.
     skip_list = (
+        {'scheme': 'bikel3', 'implementation': 'ref'},
+        {'scheme': 'bikel3', 'implementation': 'm4f'},
+        {'scheme': 'dilithium5', 'implementation': 'clean'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-leaktime'},
         {'scheme': 'falcon-1024-tree', 'implementation': 'opt-ct'},
         {'scheme': 'frodokem640aes', 'implementation': 'clean'},
@@ -32,28 +35,15 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'frodokem976shake', 'implementation': 'opt'},
         {'scheme': 'frodokem1344shake', 'implementation': 'clean'},
         {'scheme': 'frodokem1344shake', 'implementation': 'opt'},
-        {'scheme': 'mqdss-48', 'implementation': 'clean'},
-        {'scheme': 'mqdss-64', 'implementation': 'clean'},
-        {'scheme': 'ledakemlt12', 'implementation': 'leaktime'},
-        {'scheme': 'ledakemlt32', 'implementation': 'leaktime'},
-        {'scheme': 'ledakemlt52', 'implementation': 'leaktime'},
-        {'scheme': 'luov-79-76-341-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-79-76-341-keccak', 'implementation': 'ref'},
-        {'scheme': 'luov-7-83-283-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-7-83-283-keccak', 'implementation': 'ref'},
-        {'scheme': 'luov-7-110-374-chacha', 'implementation': 'ref'},
-        {'scheme': 'luov-7-110-374-keccak', 'implementation': 'ref'},
-        {'scheme': 'rainbowIa-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowIa-cyclic', 'implementation': 'clean'},
-        {'scheme': 'rainbowIa-cyclic-compressed', 'implementation': 'clean'},
-        {'scheme': 'rainbowIIIc-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowIIIc-cyclic', 'implementation': 'clean'},
-        {'scheme': 'rainbowIIIc-cyclic-compressed', 'implementation': 'clean'},
-        {'scheme': 'rainbowVc-classic', 'implementation': 'clean'},
-        {'scheme': 'rainbowVc-cyclic', 'implementation': 'clean'},
-        {'scheme': 'rainbowVc-cyclic-compressed', 'implementation': 'clean'},
-        {'scheme': 'qtesla-p-I', 'implementation': 'clean'},
-        {'scheme': 'qtesla-p-III', 'implementation': 'clean'},
+        {'scheme': 'rainbowI-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowI-circumzenithal', 'implementation': 'clean'},
+        {'scheme': 'rainbowI-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowIII-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowIII-circumzenithal', 'implementation': 'clean'},
+        {'scheme': 'rainbowIII-compressed', 'implementation': 'clean'},
+        {'scheme': 'rainbowV-classic', 'implementation': 'clean'},
+        {'scheme': 'rainbowV-circumzenithal', 'implementation': 'clean'},
+        {'scheme': 'rainbowV-compressed', 'implementation': 'clean'},
         {'scheme': 'mceliece348864', 'implementation': 'clean'},
         {'scheme': 'mceliece348864f', 'implementation': 'clean'},
         {'scheme': 'mceliece460896', 'implementation': 'clean'},
@@ -74,16 +64,12 @@ class M4Settings(mupq.PlatformSettings):
         {'scheme': 'mceliece6960119f', 'implementation': 'vec'},
         {'scheme': 'mceliece8192128', 'implementation': 'vec'},
         {'scheme': 'mceliece8192128f', 'implementation': 'vec'},
-        {'scheme': 'hqc-128-1-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'hqc-192-1-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'hqc-192-2-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'hqc-256-1-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'hqc-256-2-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'hqc-256-3-cca2', 'implementation': 'leaktime'},
-        {'scheme': 'rqc256', 'implementation': 'ref'},
+        {'scheme': 'hqc-rmrs-192', 'implementation': 'clean'},
+        {'scheme': 'hqc-rmrs-256', 'implementation': 'clean'},
     )
 
 
+import platform
 class M4(mupq.Platform):
 
     def __enter__(self):
