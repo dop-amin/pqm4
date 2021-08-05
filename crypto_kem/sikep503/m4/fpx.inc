@@ -408,6 +408,11 @@ void copy_words(const digit_t* a, digit_t* c, const unsigned int nwords)
 
 void __attribute__ ((noinline, naked)) fpmul_mont(const felm_t ma, const felm_t mb, felm_t mc)
 { // Multiprecision multiplication, c = a*b mod p.
+
+register uint32_t *p1 asm ("r0") = ma;
+register const uint32_t *p2 asm ("r1") = mb;
+register const uint32_t *p3 asm ("r2") = mc;
+
 asm volatile(\
 STRFY(P_MUL_PROLOG)
 "SUB SP, #4*32 			\n\t"
@@ -489,9 +494,8 @@ STRFY(P_RED_MID2(R0, SP,7,  23))
 
 "ADD SP, #4*35 		   \n\t"
 STRFY(P_MUL_EPILOG)
-
-  :
-  :
+  : "=rw" (p3)
+  : "r" (p1), "r" (p2)
   : "cc", "memory"
 );
 }
@@ -902,8 +906,11 @@ STRFY(P_MUL_EPILOG)
     STR PS_TMP, [R_OUT, CV(4*R_OFF + 12)]    EOL\
 
 
-void __attribute__ ((noinline, naked)) fpsqr_mont(const felm_t ma, felm_t mc)
+void __attribute__ ((naked)) fpsqr_mont(const felm_t ma, felm_t mc)
 { // Multiprecision squaring, c = a^2 mod p.
+register const uint32_t *p1 asm ("r0") = ma;
+register uint32_t *p2 asm ("r1") = mc;
+
 asm volatile(\
 STRFY(SQR_PROLOG)
 "SUB SP, #4*48 		\n\t"//32 result + 16 operands
@@ -959,9 +966,8 @@ STRFY(P_RED_MID2(R0, SP,7,  23))
 
 "ADD SP, #4*50 		\n\t"
 STRFY(SQR_EPILOG)
-
-  :
-  :
+  : "=rw" (p2)
+  : "r" (p1)
   : "cc", "memory"
 );
 
