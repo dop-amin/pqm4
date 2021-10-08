@@ -14,7 +14,7 @@ extern const uint64_t p751x2[NWORDS_FIELD];
 
 
 
-__inline void fpadd751(const digit_t* a, const digit_t* b, digit_t* c)
+void __attribute__((naked)) fpadd751(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular addition, c = a+b mod p503.
   // Inputs: a, b in [0, 2*p503-1]
   // Output: c in [0, 2*p503-1]
@@ -286,7 +286,7 @@ __inline void fpadd751(const digit_t* a, const digit_t* b, digit_t* c)
 }
 
 
-__inline void fpsub751(const digit_t* a, const digit_t* b, digit_t* c)
+void __attribute__((naked)) fpsub751(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular subtraction, c = a-b mod p503.
   // Inputs: a, b in [0, 2*p503-1]
   // Output: c in [0, 2*p503-1]

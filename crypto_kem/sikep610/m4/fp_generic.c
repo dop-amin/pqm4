@@ -13,7 +13,7 @@ extern const uint64_t p610p1[NWORDS_FIELD];
 extern const uint64_t p610x2[NWORDS_FIELD];
 
 
-__inline void fpadd610(const digit_t* a, const digit_t* b, digit_t* c)
+void __attribute__((naked)) fpadd610(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular addition, c = a+b mod p610.
   // Inputs: a, b in [0, 2*p610-1]
   // Output: c in [0, 2*p610-1]
@@ -268,7 +268,7 @@ asm(
 }
 
 
-__inline void fpsub610(const digit_t* a, const digit_t* b, digit_t* c)
+void __attribute__((naked)) fpsub610(const digit_t* a, const digit_t* b, digit_t* c)
 { // Modular subtraction, c = a-b mod p610.
   // Inputs: a, b in [0, 2*p610-1]
   // Output: c in [0, 2*p610-1]
