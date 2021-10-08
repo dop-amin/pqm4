@@ -33,7 +33,7 @@ int crypto_kem_enc(unsigned char *ct, unsigned char *ss, const unsigned char *pk
   // Input:   public key pk         (CRYPTO_PUBLICKEYBYTES bytes)
   // Outputs: shared secret ss      (CRYPTO_BYTES bytes)
   //          ciphertext message ct (CRYPTO_CIPHERTEXTBYTES = CRYPTO_PUBLICKEYBYTES + MSG_BYTES bytes)
-    unsigned char ephemeralsk[SECRETKEY_A_BYTES];
+    unsigned char ephemeralsk[SECRETKEY_A_BYTES + ((SECRETKEY_A_BYTES) % 4)] __attribute__ ((aligned (sizeof(digit_t))));
     unsigned char jinvariant[FP2_ENCODED_BYTES];
     unsigned char h[MSG_BYTES];
     unsigned char temp[CRYPTO_CIPHERTEXTBYTES+MSG_BYTES];
@@ -64,7 +64,7 @@ int crypto_kem_dec(unsigned char *ss, const unsigned char *ct, const unsigned ch
   // Input:   secret key sk         (CRYPTO_SECRETKEYBYTES = MSG_BYTES + SECRETKEY_B_BYTES + CRYPTO_PUBLICKEYBYTES bytes)
   //          ciphertext message ct (CRYPTO_CIPHERTEXTBYTES = CRYPTO_PUBLICKEYBYTES + MSG_BYTES bytes)
   // Outputs: shared secret ss      (CRYPTO_BYTES bytes)
-    unsigned char ephemeralsk_[SECRETKEY_A_BYTES];
+    unsigned char ephemeralsk_[SECRETKEY_A_BYTES + ((SECRETKEY_A_BYTES) % 4)] __attribute__ ((aligned (sizeof(digit_t))));
     unsigned char jinvariant_[FP2_ENCODED_BYTES];
     unsigned char h_[MSG_BYTES];
     unsigned char c0_[CRYPTO_PUBLICKEYBYTES];
